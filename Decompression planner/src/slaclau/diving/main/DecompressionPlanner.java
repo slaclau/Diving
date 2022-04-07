@@ -18,14 +18,14 @@ public final class DecompressionPlanner {
 			Model model = new BuhlmannModelWithGF(simpleDive, new ZHL16B() );
 			ModelledDive dive = new ModelledDive(simpleDive, model);
 			dive.descend(40, 20);
-			dive.stay(80);
+			dive.stay(60);
 			dive.getDecompressionSchedule();
 
 			Dive simpleDive2 = new SimpleDive(new Gas());
 			Model model2 = new BuhlmannModel(simpleDive2, new ZHL16B() );
 			ModelledDive dive2 = new ModelledDive(simpleDive2, model2);
 			dive2.descend(40, 20);
-			dive2.stay(80);
+			dive2.stay(60);
 			dive2.getDecompressionSchedule();
 		} catch (GasException e) {
 			e.printStackTrace();
