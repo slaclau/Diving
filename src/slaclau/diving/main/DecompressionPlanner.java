@@ -2,7 +2,6 @@ package slaclau.diving.main;
 
 import slaclau.diving.gas.Gas;
 import slaclau.diving.decompression.Model;
-import slaclau.diving.decompression.buhlmann.BuhlmannModel;
 import slaclau.diving.decompression.buhlmann.BuhlmannModelWithGF;
 import slaclau.diving.decompression.buhlmann.constants.ZHL16B;
 import slaclau.diving.dive.Dive;
@@ -18,7 +17,7 @@ public final class DecompressionPlanner {
 			Model model = new BuhlmannModelWithGF(simpleDive, new ZHL16B() );
 			ModelledDive dive = new ModelledDive(simpleDive, model);
 			dive.descend(40, 20);
-			dive.stay(10);
+			dive.stay(60);
 			dive.getDecompressionSchedule();
 		} catch (GasException e) {
 			e.printStackTrace();

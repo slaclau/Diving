@@ -2,20 +2,23 @@ package slaclau.diving.decompression.buhlmann;
 
 import slaclau.diving.decompression.buhlmann.constants.BuhlmannConstants;
 import slaclau.diving.dive.Dive;
+import slaclau.diving.gas.Gas;
 
 public class BuhlmannModelWithGF extends BuhlmannModel {
-	private static final double LOW_GF = 0.8;
+	private static final double LOW_GF = 0.2;
 	private static final double HIGH_GF = 0.8;
+	private double gradientFactorSlope;
 	
 	private static double getLowGF() {
 		return LOW_GF;
 	}
-	@SuppressWarnings("unused")
 	private static double getHighGF() {
 		return HIGH_GF;
 	}
 	
 	private double gradientFactor;
+	private double firstStop;
+	private boolean firstStopSet = false;
 
 	public BuhlmannModelWithGF(Dive dive, BuhlmannConstants constants) {
 		super(dive, constants);
@@ -27,6 +30,34 @@ public class BuhlmannModelWithGF extends BuhlmannModel {
 		clone.setNitrogenLoading(this.getNitrogenLoading().clone());
 		clone.setHeliumLoading(this.getHeliumLoading().clone());
 		return clone;
+	}
+	
+	@Override
+	public void decompress() {
+		double nextStop;
+		double stopLength;
+		double decoAscentRate = getDecoAscentRate();
+		
+		nextStop = getNextStop();
+		System.out.println("Start of decompression");
+		while ( nextStop >= getLastStop() ) {
+			ascend(nextStop, decoAscentRate);
+			dive.ascend(nextStop, decoAscentRate);
+			if ( firstStopSet ) {
+				gradientFactor = gradientFactorSlope * nextStop + getHighGF();
+			}
+			stopLength = getStopLength();
+			if ( stopLength > 0 ) { 
+				System.out.println(nextStop + " msw for " + stopLength + " minutes on " + (Gas) dive.getCurrentPoint() );
+				if ( !firstStopSet ) {
+					firstStopSet = true;
+					firstStop = nextStop;
+					gradientFactorSlope = ( getHighGF() - getLowGF() ) / firstStop;
+				}
+			}
+			nextStop = getNextStop();
+		}
+		System.out.println("End of decompression");
 	}
 	
 	@Override
