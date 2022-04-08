@@ -1,7 +1,6 @@
-package slaclau.diving.main;
+package slaclau.diving.decompression;
 
 import slaclau.diving.gas.Gas;
-import slaclau.diving.decompression.Model;
 import slaclau.diving.decompression.buhlmann.BuhlmannModelWithGF;
 import slaclau.diving.decompression.buhlmann.constants.ZHL16B;
 import slaclau.diving.dive.Dive;
