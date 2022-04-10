@@ -1,4 +1,4 @@
-package slaclau.diving.decompression.buhlmann;
+package slaclau.diving.decompression.model.buhlmann;
 
 import slaclau.diving.dive.Dive;
 
@@ -9,9 +9,9 @@ import slaclau.diving.gas.GasException;
 import static slaclau.diving.gas.Gas.getAtmosphericPressure;
 import static slaclau.diving.gas.Gas.getWaterVapourPressure;
 
-import slaclau.diving.decompression.buhlmann.constants.BuhlmannConstants;
+import slaclau.diving.decompression.model.buhlmann.constants.BuhlmannConstants;
 
-public class BuhlmannModel extends slaclau.diving.decompression.Model {
+public class BuhlmannModel extends slaclau.diving.decompression.model.Model {
 	protected BuhlmannConstants constants;
 	protected double[] nitrogenK;
 	protected double[] nitrogenA;

@@ -1,4 +1,4 @@
-package slaclau.diving.decompression.buhlmann;
+package slaclau.diving.decompression.model.buhlmann;
 
 @SuppressWarnings("serial")
 public class CompartmentOutOfRangeException extends Exception {

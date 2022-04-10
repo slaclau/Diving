@@ -5,9 +5,9 @@ import slaclau.diving.gas.GasAtDepth;
 
 public class ModelledDive implements Dive {
 	private Dive dive;
-	private slaclau.diving.decompression.Model decompressionModel;
+	private slaclau.diving.decompression.model.Model decompressionModel;
 	
-	public ModelledDive(Dive dive, slaclau.diving.decompression.Model decompressionModel) {
+	public ModelledDive(Dive dive, slaclau.diving.decompression.model.Model decompressionModel) {
 		this.dive = dive;
 		this.decompressionModel = decompressionModel;
 	}

@@ -1,6 +1,6 @@
-package slaclau.diving.decompression.buhlmann;
+package slaclau.diving.decompression.model.buhlmann;
 
-import slaclau.diving.decompression.buhlmann.constants.BuhlmannConstants;
+import slaclau.diving.decompression.model.buhlmann.constants.BuhlmannConstants;
 import slaclau.diving.dive.Dive;
 import slaclau.diving.gas.Gas;
 
@@ -18,7 +18,6 @@ public class BuhlmannModelWithGF extends BuhlmannModel {
 	
 	private double gradientFactor;
 	private double firstStop;
-	private boolean firstStopSet = false;
 
 	public BuhlmannModelWithGF(Dive dive, BuhlmannConstants constants) {
 		super(dive, constants);
@@ -37,23 +36,22 @@ public class BuhlmannModelWithGF extends BuhlmannModel {
 		double nextStop;
 		double stopLength;
 		double decoAscentRate = getDecoAscentRate();
+		double oldGradientFactor = gradientFactor;
 		
-		nextStop = getNextStop();
+		firstStop = nextStop = getNextStop();
+		gradientFactorSlope = ( getLowGF() - getHighGF() ) / firstStop;
+		
 		System.out.println("Start of decompression");
 		while ( nextStop >= getLastStop() ) {
 			ascend(nextStop, decoAscentRate);
 			dive.ascend(nextStop, decoAscentRate);
-			if ( firstStopSet ) {
-				gradientFactor = gradientFactorSlope * nextStop + getHighGF();
-			}
+			oldGradientFactor = gradientFactor;
+			if ( nextStop == getLastStop() ) gradientFactor = getHighGF();
+			else gradientFactor = gradientFactorSlope * ( nextStop - getStopInterval() ) + getHighGF();
+
 			stopLength = getStopLength();
 			if ( stopLength > 0 ) { 
-				System.out.println(nextStop + " msw for " + stopLength + " minutes on " + (Gas) dive.getCurrentPoint() );
-				if ( !firstStopSet ) {
-					firstStopSet = true;
-					firstStop = nextStop;
-					gradientFactorSlope = ( getHighGF() - getLowGF() ) / firstStop;
-				}
+				System.out.println(nextStop + " msw for " + stopLength + " minutes on " + (Gas) dive.getCurrentPoint() + ", GF is " + oldGradientFactor + ", next GF is " + gradientFactor);
 			}
 			nextStop = getNextStop();
 		}
@@ -76,6 +74,7 @@ public class BuhlmannModelWithGF extends BuhlmannModel {
 		for (int i = 0 ; i < 16 ; i++) {
 			if ( compartmentCeiling[i] > ceiling ) ceiling = compartmentCeiling[i];
 		}
+		//System.out.println(ceiling);
 		return ceiling;
 	}
 }

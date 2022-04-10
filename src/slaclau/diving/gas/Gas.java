@@ -81,7 +81,8 @@ public class Gas {
 	
 	public String toString() {
 		if ( heliumFraction == 0 ) {
-			if ( oxygenFraction == 0.21 ) return "air";
+			if (oxygenFraction == 1.0 ) return "oxygen";
+			else if ( oxygenFraction == 0.21 ) return "air";
 			else return "EAN" + (int) (100 * oxygenFraction);
 		} else {
 			return "Trimix " + (int) (100 * oxygenFraction) + "/" + (int) (100 * heliumFraction);

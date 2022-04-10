@@ -1,6 +1,6 @@
-package slaclau.diving.decompression.buhlmann.constants;
+package slaclau.diving.decompression.model.buhlmann.constants;
 
-import slaclau.diving.decompression.buhlmann.CompartmentOutOfRangeException;
+import slaclau.diving.decompression.model.buhlmann.CompartmentOutOfRangeException;
 
 public abstract class BuhlmannConstants {
 	public abstract int getNumberOfCompartments();
