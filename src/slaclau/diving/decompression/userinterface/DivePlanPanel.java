@@ -1,5 +1,7 @@
 package slaclau.diving.decompression.userinterface;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,29 +13,36 @@ import javax.swing.*;
 public class DivePlanPanel extends JPanel implements ActionListener {
 	private ArrayList<Level> levels;
 	private int numberOfLevels;
-	private JButton addButton;
+	private JButton addButton, saveButton;
 	private JPanel innerPanel = new JPanel();
-	private JScrollPane scrollPane = new JScrollPane(innerPanel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+	private JPanel outerInnerPanel = new JPanel();
+	private JPanel buttonPanel = new JPanel();
+	private JScrollPane scrollPane = new JScrollPane(outerInnerPanel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	
 	DivePlanPanel() {
 		super();
+		outerInnerPanel.add(innerPanel);
+		outerInnerPanel.add(Box.createVerticalGlue());
+		
 		levels = new ArrayList<Level>();
 		numberOfLevels = 0;
 		
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setBorder(BorderFactory.createTitledBorder("Dive plan"));
+		setLayout(new BorderLayout());
 
 		innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.Y_AXIS));
 		add(scrollPane);
-		addLevel();
-		addLevel();
 		addLevel();
 		
 		addButton = new JButton("Add level");
 		addButton.setActionCommand("add");
 		addButton.addActionListener(this);
-		add(addButton);
-		
+		saveButton = new JButton("Save dive");
+		saveButton.setActionCommand("save");
+		saveButton.addActionListener(this);
+		buttonPanel.add(addButton);
+		buttonPanel.add(saveButton);
+		add(buttonPanel,BorderLayout.SOUTH);
+
 		setVisible(true);
 	}
 	
@@ -59,6 +68,7 @@ public class DivePlanPanel extends JPanel implements ActionListener {
 			level = i;
 			
 			levelLabel = new JLabel("Level " + level);
+			levelLabel.setPreferredSize(new Dimension(100,20));
 			
 			add(levelLabel);
 			
@@ -88,6 +98,8 @@ public class DivePlanPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent ae) {
 		if (ae.getActionCommand() == "add") {
 			addLevel();
+		} else if (ae.getActionCommand() == "save" ) {
+			System.out.println("save");
 		} else {
 			int i = Integer.parseInt(ae.getActionCommand());
 			innerPanel.remove(levels.get(i-1));

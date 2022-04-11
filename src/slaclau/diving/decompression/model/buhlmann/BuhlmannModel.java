@@ -11,7 +11,7 @@ import static slaclau.diving.gas.Gas.getWaterVapourPressure;
 
 import slaclau.diving.decompression.model.buhlmann.constants.BuhlmannConstants;
 
-public class BuhlmannModel extends slaclau.diving.decompression.model.Model {
+public class BuhlmannModel extends slaclau.diving.decompression.model.ModelledDive {
 	protected BuhlmannConstants constants;
 	protected double[] nitrogenK;
 	protected double[] nitrogenA;
@@ -42,7 +42,7 @@ public class BuhlmannModel extends slaclau.diving.decompression.model.Model {
 	}
 
 	public BuhlmannModel(Dive dive, BuhlmannConstants constants) {
-		this.dive = dive;
+		super(dive);
 		this.constants = constants;
 		int numberOfCompartments = constants.getNumberOfCompartments();
 		
@@ -106,6 +106,7 @@ public class BuhlmannModel extends slaclau.diving.decompression.model.Model {
 	
 	public BuhlmannModel clone() {
 		BuhlmannModel clone = new BuhlmannModel(dive.clone(), constants);
+		clone.setDecoGasPlan(getDecoGasPlan().clone());
 		clone.setNitrogenLoading(this.getNitrogenLoading().clone());
 		clone.setHeliumLoading(this.getHeliumLoading().clone());
 		return clone;
@@ -117,8 +118,10 @@ public class BuhlmannModel extends slaclau.diving.decompression.model.Model {
 	
 	@Override
 	public void descend(double depth, double rate) {
+		super.descend(depth, rate);
 		GasAtDepth gas = dive.getCurrentPoint();
 		double oldDepth = gas.getDepth();
+		dive.descend(depth, rate);
 		
 		double nitrogenFraction = gas.getNitrogenFraction();
 		double heliumFraction = gas.getHeliumFraction();
@@ -145,8 +148,10 @@ public class BuhlmannModel extends slaclau.diving.decompression.model.Model {
 
 	@Override
 	public void stay(double timeInterval) {
+		super.stay(timeInterval);
 		GasAtDepth gas = dive.getCurrentPoint();
 		double depth = gas.getDepth();
+		dive.stay(timeInterval);
 		
 		double nitrogenFraction = gas.getNitrogenFraction();
 		double heliumFraction = gas.getHeliumFraction();
@@ -169,8 +174,10 @@ public class BuhlmannModel extends slaclau.diving.decompression.model.Model {
 
 	@Override
 	public void ascend(double depth, double rate) {
+		super.ascend(depth, rate);
 		GasAtDepth gas = dive.getCurrentPoint();
 		double oldDepth = gas.getDepth();
+		dive.ascend(depth, rate);
 		
 		double nitrogenFraction = gas.getNitrogenFraction();
 		double heliumFraction = gas.getHeliumFraction();

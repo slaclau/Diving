@@ -26,13 +26,15 @@ public class BuhlmannModelWithGF extends BuhlmannModel {
 	
 	public BuhlmannModelWithGF clone() {
 		BuhlmannModelWithGF clone = new BuhlmannModelWithGF(dive.clone(), constants);
+		clone.setDecoGasPlan(getDecoGasPlan().clone());
 		clone.setNitrogenLoading(this.getNitrogenLoading().clone());
 		clone.setHeliumLoading(this.getHeliumLoading().clone());
 		return clone;
 	}
 	
 	@Override
-	public void decompress() {
+	public String decompress() {
+		String string = "Start of decompression\n";
 		double nextStop;
 		double stopLength;
 		double decoAscentRate = getDecoAscentRate();
@@ -40,8 +42,6 @@ public class BuhlmannModelWithGF extends BuhlmannModel {
 		
 		firstStop = nextStop = getNextStop();
 		gradientFactorSlope = ( getLowGF() - getHighGF() ) / firstStop;
-		
-		System.out.println("Start of decompression");
 		while ( nextStop >= getLastStop() ) {
 			ascend(nextStop, decoAscentRate);
 			dive.ascend(nextStop, decoAscentRate);
@@ -51,11 +51,14 @@ public class BuhlmannModelWithGF extends BuhlmannModel {
 
 			stopLength = getStopLength();
 			if ( stopLength > 0 ) { 
-				System.out.println(nextStop + " msw for " + stopLength + " minutes on " + (Gas) dive.getCurrentPoint() + ", GF is " + oldGradientFactor + ", next GF is " + gradientFactor);
+				string += (nextStop + " msw for " + stopLength + " minutes on " + (Gas) dive.getCurrentPoint() 
+				+ ", GF is " + Math.round( 1000 * oldGradientFactor ) / 1000d 
+				+ ", next GF is " + Math.round( 1000 * gradientFactor ) / 1000d + "\n");
 			}
 			nextStop = getNextStop();
 		}
-		System.out.println("End of decompression");
+		string += "End of decompression";
+		return string;
 	}
 	
 	@Override
