@@ -1,23 +1,25 @@
 package slaclau.diving.decompression.model.buhlmann;
 
+import slaclau.diving.decompression.DecompressionSchedule;
+import slaclau.diving.decompression.model.ModelledDive;
 import slaclau.diving.decompression.model.buhlmann.constants.BuhlmannConstants;
 import slaclau.diving.dive.Dive;
-import slaclau.diving.gas.Gas;
 
 public class BuhlmannModelWithGF extends BuhlmannModel {
 	private static final double LOW_GF = 0.2;
 	private static final double HIGH_GF = 0.8;
 	private double gradientFactorSlope;
 	
-	private static double getLowGF() {
+	public double getLowGF() {
 		return LOW_GF;
 	}
-	private static double getHighGF() {
+	public double getHighGF() {
 		return HIGH_GF;
 	}
 	
 	private double gradientFactor;
 	private double firstStop;
+	private double firstStopTime = 0;
 
 	public BuhlmannModelWithGF(Dive dive, BuhlmannConstants constants) {
 		super(dive, constants);
@@ -31,10 +33,16 @@ public class BuhlmannModelWithGF extends BuhlmannModel {
 		clone.setHeliumLoading(this.getHeliumLoading().clone());
 		return clone;
 	}
+	@Override
+	public ModelledDive cloneAndReset() {
+		BuhlmannModelWithGF clone = new BuhlmannModelWithGF(dive.cloneAndReset(), constants);
+		clone.setDecoGasPlan(getDecoGasPlan().clone());
+		return clone;
+	}
 	
 	@Override
-	public String decompress() {
-		String string = "Start of decompression\n";
+	public DecompressionSchedule decompress() {
+		DecompressionSchedule schedule = new DecompressionSchedule();
 		double nextStop;
 		double stopLength;
 		double decoAscentRate = getDecoAscentRate();
@@ -42,23 +50,22 @@ public class BuhlmannModelWithGF extends BuhlmannModel {
 		
 		firstStop = nextStop = getNextStop();
 		gradientFactorSlope = ( getLowGF() - getHighGF() ) / firstStop;
+		ascend(nextStop, decoAscentRate);
+		firstStopTime = getTime();
 		while ( nextStop >= getLastStop() ) {
-			ascend(nextStop, decoAscentRate);
+			if(nextStop != firstStop) ascend(nextStop, decoAscentRate);
 			dive.ascend(nextStop, decoAscentRate);
 			oldGradientFactor = gradientFactor;
 			if ( nextStop == getLastStop() ) gradientFactor = getHighGF();
 			else gradientFactor = gradientFactorSlope * ( nextStop - getStopInterval() ) + getHighGF();
 
 			stopLength = getStopLength();
-			if ( stopLength > 0 ) { 
-				string += (nextStop + " msw for " + stopLength + " minutes on " + (Gas) dive.getCurrentPoint() 
-				+ ", GF is " + Math.round( 1000 * oldGradientFactor ) / 1000d 
-				+ ", next GF is " + Math.round( 1000 * gradientFactor ) / 1000d + "\n");
-			}
+			schedule.addStop(stopLength, dive.getCurrentPoint(), "GF is " + Math.round( 1000 * oldGradientFactor ) / 1000d );
+
 			nextStop = getNextStop();
 		}
-		string += "End of decompression";
-		return string;
+		ascend(0, decoAscentRate);
+		return schedule;
 	}
 	
 	@Override
@@ -79,5 +86,38 @@ public class BuhlmannModelWithGF extends BuhlmannModel {
 		}
 		//System.out.println(ceiling);
 		return ceiling;
+	}
+	public double getFirstStopTime() {
+		return firstStopTime;
+	}
+	public double getGradientFactor() {
+		double depth = dive.getCurrentPoint().getDepth();
+		if ( depth > firstStop ) return getLowGF();
+		else return gradientFactorSlope * depth + getHighGF();
+	}
+	public double getActualCeiling() {
+		double compartmentCeiling[] = new double[16];
+		double a;
+		double b;
+		for (int i = 0 ; i < 16 ; i++) {
+			a = ( nitrogenA[i] * nitrogenLoading[i] + heliumA[i] * heliumLoading[i] ) / ( nitrogenLoading[i] + heliumLoading[i] );
+			b = ( nitrogenB[i] * nitrogenLoading[i] + heliumB[i] * heliumLoading[i] ) / ( nitrogenLoading[i] + heliumLoading[i] );
+
+			compartmentCeiling[i] = 10 * ( ( nitrogenLoading[i] + heliumLoading[i] - getGradientFactor() * a ) / ( getGradientFactor() / b - getGradientFactor() + 1 ) - 1 );
+		}
+		
+		double ceiling = compartmentCeiling[0];
+		for (int i = 0 ; i < 16 ; i++) {
+			if ( compartmentCeiling[i] > ceiling ) ceiling = compartmentCeiling[i];
+		}
+		//System.out.println(ceiling);
+		return ceiling;
+	}
+	public double getFirstStop() {
+		return firstStop;
+	}
+	public void setFirstStop(double firstStop) {
+		this.firstStop = firstStop;
+		gradientFactorSlope = ( getLowGF() - getHighGF() ) / firstStop;
 	}
 }

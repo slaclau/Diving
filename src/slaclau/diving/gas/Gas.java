@@ -1,7 +1,7 @@
 package slaclau.diving.gas;
 
 public class Gas {
-	private static final double ATMOSPHERIC_PRESSURE = 1;
+	private static final double ATMOSPHERIC_PRESSURE = 1.013;
 	private static final double WATER_VAPOUR_PRESSURE = 0.0627;
 	
 	public static double getAtmosphericPressure() {
@@ -61,7 +61,7 @@ public class Gas {
 	}
 	
 	public double getMOD() {
-		return 10 * ( MAX_PO2 / oxygenFraction - 1 );
+		return Math.round( 10 * ( MAX_PO2 / oxygenFraction - 1 ) );
 	}
 	
 	public double getMSD() {

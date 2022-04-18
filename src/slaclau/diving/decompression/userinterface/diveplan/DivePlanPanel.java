@@ -1,4 +1,4 @@
-package slaclau.diving.decompression.userinterface;
+package slaclau.diving.decompression.userinterface.diveplan;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -19,8 +19,13 @@ public class DivePlanPanel extends JPanel implements ActionListener {
 	private JPanel buttonPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane(outerInnerPanel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	
-	DivePlanPanel() {
+	private DivePlanListener divePlanListener;
+	
+	private boolean init = false;
+	
+	public DivePlanPanel() {
 		super();
+		
 		outerInnerPanel.add(innerPanel);
 		outerInnerPanel.add(Box.createVerticalGlue());
 		
@@ -30,6 +35,14 @@ public class DivePlanPanel extends JPanel implements ActionListener {
 		setLayout(new BorderLayout());
 
 		innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.Y_AXIS));
+	}
+	
+	public void addListenerAndInit(DivePlanListener divePlanListener) {
+		this.divePlanListener = divePlanListener;
+		if ( !init ) init();
+	}
+	
+	private void init() {
 		add(scrollPane);
 		addLevel();
 		
@@ -48,7 +61,7 @@ public class DivePlanPanel extends JPanel implements ActionListener {
 	
 	void addLevel() {
 		numberOfLevels++;
-		Level level = new Level(numberOfLevels,this);
+		Level level = new Level(numberOfLevels);
 		levels.add(level);
 		innerPanel.add(level);
 		if (levels.size() > 1) {
@@ -61,23 +74,31 @@ public class DivePlanPanel extends JPanel implements ActionListener {
 	class Level extends JPanel {
 		private JButton levelButton;
 		private JLabel levelLabel;
+		private JTextField depthField, timeField;
 		int level;
 		
-		Level(int i,ActionListener a) {
+		Level(int i) {
 			super(new FlowLayout());
 			level = i;
 			
 			levelLabel = new JLabel("Level " + level);
 			levelLabel.setPreferredSize(new Dimension(100,20));
-			
 			add(levelLabel);
 			
-			add(new JTextField(20));
+			depthField = new JTextField(10);
+			depthField.setText("10");
+			depthField.addActionListener(divePlanListener);
+			add(depthField);
+			
+			timeField = new JTextField(10);
+			timeField.setText("10");
+			timeField.addActionListener(divePlanListener);
+			add(timeField);
 			
 			levelButton = new JButton("Remove level");
 			levelButton.setEnabled(false);
 			levelButton.setActionCommand(((Integer) level).toString());
-			levelButton.addActionListener(a);
+			levelButton.addActionListener(DivePlanPanel.this);
 			add(levelButton);
 		}
 		
@@ -92,6 +113,22 @@ public class DivePlanPanel extends JPanel implements ActionListener {
 			levelLabel.setText("Level " + level);
 			levelButton.setActionCommand(((Integer) level).toString());
 		}
+		double getDepth() {
+			return Double.valueOf( depthField.getText() );
+		}
+		double getTime() {
+			return Double.valueOf( timeField.getText() );
+		}
+	}
+	
+	public int getNumberOfLevels() {
+		return numberOfLevels;
+	}
+	public double getDepthOfLevel(int i) {
+		return levels.get(i).getDepth();
+	}
+	public double getTimeOfLevel(int i) {
+		return levels.get(i).getTime();
 	}
 
 	@Override

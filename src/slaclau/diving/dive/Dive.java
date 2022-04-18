@@ -12,4 +12,8 @@ public interface Dive extends Cloneable {
 	public GasAtDepth getCurrentPoint();
 	public double getTime();
 	public Dive clone();
+	public Dive cloneAndReset();
+	public GasAtDepth getPoint(int i);
+	public double getTime(int i);
+	public int getNumberOfPoints();
 }

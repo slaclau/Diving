@@ -3,7 +3,7 @@ package slaclau.diving.decompression.model;
 import slaclau.diving.dive.Dive;
 import slaclau.diving.gas.GasAtDepth;
 
-public class PulmonaryOxygenToxicityModel {
+public class PulmonaryOxygenToxicityModel implements AccessoryModel<Double>{
 	private Dive dive;
 	private double OTUs = 0;
 	
@@ -11,7 +11,7 @@ public class PulmonaryOxygenToxicityModel {
 		this.dive = dive;
 	}
 	
-	public double getOTUs() {
+	public Double get() {
 		return OTUs;
 	}
 	

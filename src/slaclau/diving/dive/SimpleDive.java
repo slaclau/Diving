@@ -8,6 +8,9 @@ import slaclau.diving.gas.GasAtDepth;
 public class SimpleDive implements Dive {
 	private ArrayList<Double> times = new ArrayList<Double>();
 	private ArrayList<GasAtDepth> divePoints = new ArrayList<GasAtDepth>();
+	private final double initialTime;
+	private final GasAtDepth initialPoint;
+	
 	public ArrayList<Double> getTimes() {
 		return times;
 	}
@@ -26,12 +29,16 @@ public class SimpleDive implements Dive {
 	
 	private double duration = 0;
 
-	public SimpleDive(ArrayList<Double> times, ArrayList<GasAtDepth> divePoints) {
+	private SimpleDive(ArrayList<Double> times, ArrayList<GasAtDepth> divePoints) {
+		initialTime = times.get(0);
+		initialPoint = divePoints.get(0);
 		setTimes(times);
 		setDivePoints(divePoints);
 	}
 	
 	public SimpleDive(double time, GasAtDepth gas) {
+		initialTime = time;
+		initialPoint = gas;
 		times.add(time);
 		divePoints.add(gas);
 	}
@@ -119,5 +126,25 @@ public class SimpleDive implements Dive {
 	@Override
 	public double getTime() {
 		return duration;
+	}
+
+	@Override
+	public Dive cloneAndReset() {
+		return new SimpleDive(initialTime, initialPoint);
+	}
+
+	@Override
+	public GasAtDepth getPoint(int i) {
+		return divePoints.get(i);
+	}
+
+	@Override
+	public double getTime(int i) {
+		return times.get(i);
+	}
+
+	@Override
+	public int getNumberOfPoints() {
+		return divePoints.size();
 	}
 }

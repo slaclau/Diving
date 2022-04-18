@@ -3,12 +3,12 @@ package slaclau.diving.decompression.model;
 import slaclau.diving.dive.Dive;
 import slaclau.diving.gas.GasAtDepth;
 
-public class CNSOxygenToxicityModel {
+public class CNSOxygenToxicityModel implements AccessoryModel<Double> {
 	private Dive dive;
 	private double CNSfraction = 0;
 	
 	private static final double[] PO2_LOW = {0.5, 0.6, 0.7, 0.8, 0.9, 1.1, 1.5};
-	private static final double[] PO2_HIGH = {0.6, 0.7, 0.8, 0.9, 1.1, 1.5, 1.6};
+	private static final double[] PO2_HIGH = {0.6, 0.7, 0.8, 0.9, 1.1, 1.5, 1.7};
 	private static final double[] CNS_M = {-1800, -1500, -1200, -900, -600, -300, -750};
 	private static final double[] CNS_C = {1800, 1620, 1410, 1170, 900, 570, 1245};
 	
@@ -16,7 +16,7 @@ public class CNSOxygenToxicityModel {
 		this.dive = dive;
 	}
 	
-	public double getCNS() {
+	public Double get() {
 		return CNSfraction;
 	}
 	
@@ -47,7 +47,7 @@ public class CNSOxygenToxicityModel {
 				
 				double limitTime = m * lowPO2 + c;
 				
-				double temp = 1d / mk * ( Math.log( Math.abs( limitTime + mk * exposureTime ) ) - Math.log( Math.abs( limitTime ) ) );
+				double temp = 100d / mk * ( Math.log( Math.abs( limitTime + mk * exposureTime ) ) - Math.log( Math.abs( limitTime ) ) );
 				CNSfraction += temp;
 			}
 		}
@@ -80,7 +80,7 @@ public class CNSOxygenToxicityModel {
 				
 				double limitTime = m * highPO2 + c;
 				
-				double temp = 1d / mk * ( Math.log( Math.abs( limitTime + mk * exposureTime ) ) - Math.log( Math.abs( limitTime ) ) );
+				double temp = 100d / mk * ( Math.log( Math.abs( limitTime + mk * exposureTime ) ) - Math.log( Math.abs( limitTime ) ) );
 				CNSfraction += temp;
 			}
 		}
@@ -99,7 +99,7 @@ public class CNSOxygenToxicityModel {
 				double c = CNS_C[i];
 				
 				double limitTime = m * pO2 + c;
-				CNSfraction += time / limitTime;
+				CNSfraction += 100d * time / limitTime;
 				break;
 			}
 		}

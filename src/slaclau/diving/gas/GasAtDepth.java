@@ -19,20 +19,28 @@ public class GasAtDepth extends Gas {
 	public void setDepth(double depth) {
 		this.depth = depth;
 	}
+	public static double getPressure(double depth) {
+		return depth / 10 + getAtmosphericPressure();
+	}
+	
+	
+	public double getPressure() {
+		return getPressure(depth);
+	}
 	
 	public double getEND() {
 		return ( depth + 10 ) * ( 1 - getHeliumFraction() ) - 10;
 	}
 	
 	public double getOxygenPartialPressure() {
-		return getOxygenFraction() * ( getDepth() / 10 + 1);
+		return getOxygenFraction() * getPressure();
 	}
 	
 	public double getNitrogenPartialPressure() {
-		return getNitrogenFraction() * ( getDepth() / 10 + 1);
+		return getNitrogenFraction() * getPressure();
 	}
 	
 	public double getHeliumPartialPressure() {
-		return getHeliumFraction() * ( getDepth() / 10 + 1);
+		return getHeliumFraction() * getPressure();
 	}
 }

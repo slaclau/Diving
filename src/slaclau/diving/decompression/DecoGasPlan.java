@@ -47,7 +47,14 @@ public class DecoGasPlan implements Cloneable {
 		if ( d != null) gas = gasSwitchPoints.get(d);
 		return gas;
 	}
-	public void printDepths() {
-		System.out.print(depths);
+	public Gas[] getDecoGases() {
+		Gas[] gases = new Gas[gasSwitchPoints.size()];
+		int i = 0;
+		for ( Gas gas : gasSwitchPoints.values() ) {
+			gases[i] = gas;
+			i++;
+			
+		}
+		return gases;
 	}
 }

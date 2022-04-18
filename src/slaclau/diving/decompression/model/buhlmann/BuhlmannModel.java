@@ -9,6 +9,7 @@ import slaclau.diving.gas.GasException;
 import static slaclau.diving.gas.Gas.getAtmosphericPressure;
 import static slaclau.diving.gas.Gas.getWaterVapourPressure;
 
+import slaclau.diving.decompression.model.ModelledDive;
 import slaclau.diving.decompression.model.buhlmann.constants.BuhlmannConstants;
 
 public class BuhlmannModel extends slaclau.diving.decompression.model.ModelledDive {
@@ -224,5 +225,45 @@ public class BuhlmannModel extends slaclau.diving.decompression.model.ModelledDi
 			if ( compartmentCeiling[i] > ceiling ) ceiling = compartmentCeiling[i];
 		}
 		return ceiling;
+	}
+
+	@Override
+	public ModelledDive cloneAndReset() {
+		BuhlmannModel clone = new BuhlmannModel(dive.cloneAndReset(), constants);
+		clone.setDecoGasPlan(getDecoGasPlan().clone());
+		return clone;
+	}
+
+	@Override
+	public double getCurrentGradient() {
+		double gradient = getCurrentGradient(0);
+		for (int i = 0 ; i < 16 ; i++) {
+			if ( getCurrentGradient(i) > gradient ) gradient = getCurrentGradient(i);
+		}
+		return gradient;
+	}
+	
+	private double getCurrentGradient(int i) {
+		double ambientPressure = dive.getCurrentPoint().getPressure();
+		double a = ( nitrogenA[i] * nitrogenLoading[i] + heliumA[i] * heliumLoading[i] ) / ( nitrogenLoading[i] + heliumLoading[i] );
+		double b = ( nitrogenB[i] * nitrogenLoading[i] + heliumB[i] * heliumLoading[i] ) / ( nitrogenLoading[i] + heliumLoading[i] );
+		double mValue = ambientPressure / b + a;
+		return ( nitrogenLoading[i] + heliumLoading[i] - ambientPressure ) / ( mValue - ambientPressure );
+	}
+	
+	public double getSurfaceGradient() {
+		double gradient = getSurfaceGradient(0);
+		for (int i = 0 ; i < 16 ; i++) {
+			if ( getSurfaceGradient(i) > gradient ) gradient = getSurfaceGradient(i);
+		}
+		return gradient;
+	}
+	
+	private double getSurfaceGradient(int i) {
+		double surfacePressure = Gas.getAtmosphericPressure();
+		double a = ( nitrogenA[i] * nitrogenLoading[i] + heliumA[i] * heliumLoading[i] ) / ( nitrogenLoading[i] + heliumLoading[i] );
+		double b = ( nitrogenB[i] * nitrogenLoading[i] + heliumB[i] * heliumLoading[i] ) / ( nitrogenLoading[i] + heliumLoading[i] );
+		double mValue = surfacePressure / b + a;
+		return ( nitrogenLoading[i] + heliumLoading[i] - surfacePressure ) / ( mValue - surfacePressure );
 	}
 }
