@@ -61,7 +61,7 @@ public class Gas {
 	}
 	
 	public double getMOD() {
-		return Math.round( 10 * ( MAX_PO2 / oxygenFraction - 1 ) );
+		return 10 * ( MAX_PO2 / oxygenFraction - 1 );
 	}
 	
 	public double getMSD() {

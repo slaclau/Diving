@@ -2,6 +2,7 @@ package slaclau.diving.decompression.model.buhlmann;
 
 import slaclau.diving.decompression.DecompressionSchedule;
 import slaclau.diving.decompression.model.ModelledDive;
+import slaclau.diving.decompression.model.StopLengthException;
 import slaclau.diving.decompression.model.buhlmann.constants.BuhlmannConstants;
 import slaclau.diving.dive.Dive;
 
@@ -41,7 +42,7 @@ public class BuhlmannModelWithGF extends BuhlmannModel {
 	}
 	
 	@Override
-	public DecompressionSchedule decompress() {
+	public DecompressionSchedule decompress() throws StopLengthException {
 		DecompressionSchedule schedule = new DecompressionSchedule();
 		double nextStop;
 		double stopLength;

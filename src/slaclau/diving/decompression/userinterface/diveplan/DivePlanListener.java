@@ -9,6 +9,7 @@ import javax.swing.event.ChangeListener;
 import slaclau.diving.decompression.DecoGasPlan;
 import slaclau.diving.decompression.DecompressionSchedule;
 import slaclau.diving.decompression.model.ModelledDive;
+import slaclau.diving.decompression.model.StopLengthException;
 import slaclau.diving.decompression.model.buhlmann.BuhlmannModelWithGF;
 import slaclau.diving.decompression.model.buhlmann.constants.ZHL16B;
 import slaclau.diving.decompression.userinterface.UserInterface;
@@ -16,8 +17,7 @@ import slaclau.diving.decompression.userinterface.chart.DiveChartPanel;
 import slaclau.diving.dive.Dive;
 import slaclau.diving.dive.SimpleDive;
 import slaclau.diving.gas.Gas;
-import slaclau.diving.gas.GasException;
-import slaclau.diving.gas.Nitrox;
+import slaclau.diving.gas.GasAtDepth;
 
 public class DivePlanListener implements ActionListener, ChangeListener {
 	private ModelledDive dive;
@@ -26,33 +26,40 @@ public class DivePlanListener implements ActionListener, ChangeListener {
 	private DivePlanPanel divePlanPanel;
 	private GasPlanPanel gasPlanPanel;
 	private DecoPlanPanel decoPlanPanel;
+	private ExtraInfoPanel extraInfoPanel;
 	private DiveChartPanel diveChartPanel;
 	
 	private UserInterface userInterface;
 	
-	public DivePlanListener(DivePlanPanel divePlanPanel, GasPlanPanel gasPlanPanel, DecoPlanPanel decoPlanPanel, UserInterface userInterface) {
-		this.divePlanPanel = divePlanPanel;
-		this.gasPlanPanel = gasPlanPanel;
-		this.decoPlanPanel = decoPlanPanel;
-		this.userInterface = userInterface;
+	public DivePlanListener(DivePlanMainPanel divePlanMainPanel) {
+		divePlanPanel = divePlanMainPanel.getDivePlanPanel();
+		gasPlanPanel = divePlanMainPanel.getGasPlanPanel();
+		decoPlanPanel = divePlanMainPanel.getDecoPlanPanel();
+		extraInfoPanel = divePlanMainPanel.getExtraInfoPanel();
 		
-		this.diveChartPanel = userInterface.getDiveChartPanel();
+		userInterface = divePlanMainPanel.getUserInterface();
+		
+		diveChartPanel = userInterface.getDiveChartPanel();
 	}
 	
+	private Thread updateThread = new Thread("updateThread");
+	
+	@SuppressWarnings({ "deprecation" })
 	public void onUpdate() {
 		decoGasPlan = new DecoGasPlan();
-		Gas gas = gasPlanPanel.getBottomGas();
-		double depth = gas.getMOD();
-		decoGasPlan.addDecoGas(depth, gas);
+		Gas bottomGas = gasPlanPanel.getBottomGas();
+		double depth = bottomGas.getMOD();
+		decoGasPlan.addDecoGas(depth, bottomGas);
+		
+		GasAtDepth gas;
 		
 		for ( int i = 0 ; i < gasPlanPanel.getNumberOfGases() ; i++ ) {
-			gas = gasPlanPanel.getGas(i);
-			depth = gas.getMOD();
+			gas = gasPlanPanel.getGasSwitchPoint(i);
+			depth = gas.getDepth();
 			decoGasPlan.addDecoGas(depth, gas);
 		}
 		
-		Gas BottomGas = gasPlanPanel.getBottomGas();
-		Dive simpleDive = new SimpleDive(BottomGas);
+		Dive simpleDive = new SimpleDive(bottomGas);
 		dive = new BuhlmannModelWithGF(simpleDive, new ZHL16B() );
 		dive.setDecoGasPlan(decoGasPlan);
 		
@@ -64,17 +71,26 @@ public class DivePlanListener implements ActionListener, ChangeListener {
 			else dive.ascend(newDepth, dive.getAscentRate() );
 			dive.stay(divePlanPanel.getTimeOfLevel(i) );
 		}
-		DecompressionSchedule decompressionSchedule = dive.decompress();
-		decoPlanPanel.setDecoPlan(decompressionSchedule);
-		decoPlanPanel.getParent().repaint();
-		userInterface.println(decompressionSchedule.toString());
-		try {
-			userInterface.println("CNS% is " + dive.getCNS() + ", OTUs are " + dive.getOTUs() +", gas used is " + dive.getGasConsumed(gasPlanPanel.getBottomGas()) + ", EAN40 used is " + dive.getGasConsumed(new Nitrox(.4)));
-		} catch (GasException e) {
-			e.printStackTrace();
-		}
+		Runnable r = () -> {
+			DecompressionSchedule decompressionSchedule;
+			try {
+				decompressionSchedule = dive.decompress();
+				decoPlanPanel.setDecoPlan(decompressionSchedule);
+				decoPlanPanel.getParent().repaint();
+				userInterface.println(decompressionSchedule.toString());
+			
+				extraInfoPanel.setInfo(dive.getfExtraInfo() );
+				extraInfoPanel.getParent().repaint();
+
+				diveChartPanel.plotDive(dive);
+			} catch (StopLengthException e) {
+				userInterface.println(e.toString());
+			}
+		};
 		
-		diveChartPanel.plotDive(dive);
+		updateThread.stop();
+		updateThread = new Thread(r,"updateThread");
+		updateThread.start();
 	}
 
 	@Override

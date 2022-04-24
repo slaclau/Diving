@@ -22,6 +22,9 @@ public class GasConsumptionModel implements AccessoryModel<Double> {
 	public Double get() {
 		return gasConsumed;
 	}
+	public String getf() {
+		return Math.round( get() * 10d ) / 10d + " l";
+	}
 
 	@Override
 	public void descend(double depth, double rate) {

@@ -12,6 +12,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import slaclau.diving.gas.Gas;
+import slaclau.diving.gas.GasAtDepth;
 import slaclau.diving.gas.GasException;
 import slaclau.diving.gas.Trimix;
 
@@ -58,6 +59,7 @@ public class GasPlanPanel extends JPanel implements ActionListener {
 		addButton = new JButton("Add gas");
 		addButton.setActionCommand("add");
 		addButton.addActionListener(this);
+		addButton.addActionListener(divePlanListener);
 		saveButton = new JButton("Save gas plan");
 		saveButton.setActionCommand("save");
 		saveButton.addActionListener(this);
@@ -79,6 +81,9 @@ public class GasPlanPanel extends JPanel implements ActionListener {
 		private JButton gasButton;
 		private JLabel gasLabel;
 		private JSpinner oxygenField, nitrogenField, heliumField;
+		private JTextField depthField = new JTextField(5);
+
+		
 		private SpinnerNumberModel oxygenModel = new SpinnerNumberModel(21, 0, 100, 1);
 		private SpinnerNumberModel nitrogenModel = new SpinnerNumberModel(79, 0, 100, 1);
 		private SpinnerNumberModel heliumModel = new SpinnerNumberModel(0, 0, 100, 1);
@@ -104,6 +109,9 @@ public class GasPlanPanel extends JPanel implements ActionListener {
 			heliumField.addChangeListener(this);
 			add(heliumField);
 			
+			depthField.setEnabled(false);
+			add(depthField);
+						
 			gasButton = new JButton("Remove gas");
 			gasButton.setEnabled(false);
 			gasButton.setActionCommand("Bottom");
@@ -127,14 +135,17 @@ public class GasPlanPanel extends JPanel implements ActionListener {
 						
 			int nitrogen = 100 - getOxygen() - getHelium();
 			
-			nitrogenField.setValue(nitrogen);		
+			nitrogenField.setValue(nitrogen);
 		}
 	}
 	
-	class GasChoice extends JPanel implements ChangeListener {
+	class GasChoice extends JPanel implements ChangeListener, ActionListener {
+		private GasAtDepth gas;
 		private JButton gasButton;
 		private JLabel gasLabel;
 		private JSpinner oxygenField, nitrogenField, heliumField;
+		private JTextField depthField = new JTextField(5);
+
 		private SpinnerNumberModel oxygenModel = new SpinnerNumberModel(100, 0, 100, 1);
 		private SpinnerNumberModel nitrogenModel = new SpinnerNumberModel(0, 0, 100, 1);
 		private SpinnerNumberModel heliumModel = new SpinnerNumberModel(0, 0, 100, 1);
@@ -149,7 +160,6 @@ public class GasPlanPanel extends JPanel implements ActionListener {
 			add(gasLabel);
 			
 			oxygenField = new JSpinner(oxygenModel);
-			oxygenField.addChangeListener(divePlanListener);
 			oxygenField.addChangeListener(this);
 			add(oxygenField);
 			
@@ -158,14 +168,23 @@ public class GasPlanPanel extends JPanel implements ActionListener {
 			add(nitrogenField);
 			
 			heliumField = new JSpinner(heliumModel);
-			heliumField.addChangeListener(divePlanListener);
 			heliumField.addChangeListener(this);
 			add(heliumField);
+			
+			depthField.setText("6.0");
+			depthField.addActionListener(this);
+			add(depthField);
 			
 			gasButton = new JButton("Remove gas");
 			gasButton.setActionCommand(((Integer) gasChoice).toString());
 			gasButton.addActionListener(a);
 			add(gasButton);
+			
+			try {
+				gas = new GasAtDepth ( new Trimix(getOxygen() / 100d, getHelium() / 100d ), getDepth() );
+			} catch (GasException e) {
+				e.printStackTrace();
+			}
 		}
 		void setGasNumber(int i) {
 			gasChoice = i;
@@ -181,6 +200,12 @@ public class GasPlanPanel extends JPanel implements ActionListener {
 		int getHelium() {
 			return Integer.valueOf(heliumField.getValue().toString() );
 		}
+		double getDepth() {
+			return Double.valueOf(depthField.getText());
+		}
+		GasAtDepth getGasSwitchPoint() {
+			return gas;
+		}
 		@Override
 		public void stateChanged(ChangeEvent ce) {
 			oxygenModel.setMaximum(100 - getHelium() );
@@ -188,7 +213,23 @@ public class GasPlanPanel extends JPanel implements ActionListener {
 						
 			int nitrogen = 100 - getOxygen() - getHelium();
 			
-			nitrogenField.setValue(nitrogen);		
+			nitrogenField.setValue(nitrogen);
+			try {
+				depthField.setText( String.valueOf((double) Math.round( new Trimix(getOxygen() / 100d, getHelium() / 100d ).getMOD() ) ) );
+			} catch (GasException e) {
+				e.printStackTrace();
+			}
+			try {
+				gas = new GasAtDepth ( new Trimix(getOxygen() / 100d, getHelium() / 100d ), getDepth() );
+			} catch (GasException e) {
+				e.printStackTrace();
+			}
+			divePlanListener.onUpdate();
+		}
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			gas.setDepth(getDepth());
+			divePlanListener.onUpdate();
 		}
 	}
 	
@@ -203,13 +244,8 @@ public class GasPlanPanel extends JPanel implements ActionListener {
 		}
 		return null;
 	}
-	public Gas getGas(int i) {
-		try {
-			return new Trimix( gases.get(i).getOxygen() / 100d , gases.get(i).getHelium() / 100d );
-		} catch (GasException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public GasAtDepth getGasSwitchPoint(int i) {
+		return gases.get(i).getGasSwitchPoint();
 	}
 	@Override
 	public void actionPerformed(ActionEvent ae) {
@@ -227,7 +263,7 @@ public class GasPlanPanel extends JPanel implements ActionListener {
 
 			numberOfGases--;
 		}
-		
+		divePlanListener.onUpdate();
 		revalidate();
 		repaint();
 	}

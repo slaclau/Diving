@@ -19,6 +19,9 @@ public class CNSOxygenToxicityModel implements AccessoryModel<Double> {
 	public Double get() {
 		return CNSfraction;
 	}
+	public String getf() {
+		return Math.round( get() * 10d ) / 10d + "%";
+	}
 	
 	public void descend(double depth, double rate) {
 		GasAtDepth gas = dive.getCurrentPoint();

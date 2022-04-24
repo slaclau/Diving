@@ -1,5 +1,6 @@
 package slaclau.diving.decompression.userinterface.diveplan;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.*;
@@ -11,14 +12,18 @@ import slaclau.diving.gas.GasAtDepth;
 @SuppressWarnings("serial")
 public class DecoPlanPanel extends JPanel {
 	private JPanel innerPanel = new JPanel();
+	private JPanel outerInnerPanel = new JPanel();
+	private JScrollPane scrollPane = new JScrollPane(outerInnerPanel,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	
 	public DecoPlanPanel() {
-		add(innerPanel);
+		outerInnerPanel.add(innerPanel);
+		outerInnerPanel.add(Box.createVerticalGlue());
+		setLayout(new BorderLayout());
+		add(scrollPane);
 	}
 	
 	public void setDecoPlan(DecompressionSchedule decompressionSchedule) {
-		remove(innerPanel);
-		innerPanel = new JPanel();
+		innerPanel.removeAll();
 		innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.Y_AXIS));
 		for ( int i = 0 ; i < decompressionSchedule.getNumberOfStops() ; i++ ) {
 			double time = decompressionSchedule.getDecoStopTime(i);
@@ -29,7 +34,6 @@ public class DecoPlanPanel extends JPanel {
 				addDecoStop(depth, time, gas, note);
 			}
 		}
-		add(innerPanel);
 	}
 	
 	private void addDecoStop(double depth, double time, Gas gas, String note) {

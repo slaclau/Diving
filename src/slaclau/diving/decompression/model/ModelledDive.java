@@ -1,5 +1,6 @@
 package slaclau.diving.decompression.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public abstract class ModelledDive implements Dive, Cloneable {
 	private static final double ASCENT_RATE = 10;
 	private static final double DECO_ASCENT_RATE = 10;
 	private static final boolean ACCOUNT_FOR_DECO_ASCENT_TIME = false;
+	private static final int MAX_STOP_LENGTH = 1000;
 	
 	private DecoGasPlan decoGasPlan;
 	private PulmonaryOxygenToxicityModel pulmonaryModel;
@@ -99,7 +101,7 @@ public abstract class ModelledDive implements Dive, Cloneable {
 		double nextStop = getStopInterval() * Math.ceil( getCeiling() / getStopInterval() );
 		return nextStop;
 	}
-	public double getStopLength() {
+	public double getStopLength() throws StopLengthException {
 		int stopLength = 0;
 		double currentStop = dive.getCurrentPoint().getDepth();
 		Gas gas = decoGasPlan.getCorrectGas( currentStop );
@@ -115,11 +117,13 @@ public abstract class ModelledDive implements Dive, Cloneable {
 			while ( getNextStop() == currentStop ) {
 				stay( getStopLengthUnit() );
 				stopLength++;
+				if ( stopLength > getMaxStopLength() ) throw new StopLengthException();
 			}
 		} else {
 			while ( getNextStop() > 0 ) {
 				stay( getStopLengthUnit() );
 				stopLength++;
+				if ( stopLength > getMaxStopLength() ) throw new StopLengthException();
 			}
 		}
 		if ( accountForDecoAscentTime() && stopLength == 0 ) {
@@ -128,7 +132,7 @@ public abstract class ModelledDive implements Dive, Cloneable {
 		return stopLength * getStopLengthUnit();
 	}
 	
-	public DecompressionSchedule decompress() {
+	public DecompressionSchedule decompress() throws StopLengthException {
 		DecompressionSchedule schedule = new DecompressionSchedule();
 		double nextStop;
 		double stopLength;
@@ -144,7 +148,7 @@ public abstract class ModelledDive implements Dive, Cloneable {
 		return schedule;
 	}
 	
-	public DecompressionSchedule getDecompressionSchedule() {
+	public DecompressionSchedule getDecompressionSchedule() throws StopLengthException {
 		ModelledDive clone = (ModelledDive) this.clone();
 		return clone.decompress();
 	}
@@ -155,6 +159,12 @@ public abstract class ModelledDive implements Dive, Cloneable {
 	public double getCNS() {
 		return cnsModel.get();
 	}
+	public String getfOTUs() {
+		return pulmonaryModel.getf();
+	}
+	public String getfCNS() {
+		return cnsModel.getf();
+	}
 	public double getGasConsumed(Gas gas) {
 		int i = -1 ,j = 0;
 		for (Gas decoGas : decoGases ) {
@@ -163,6 +173,65 @@ public abstract class ModelledDive implements Dive, Cloneable {
 		}
 		if ( i < 0 ) return 0;
 		else return (double) accessoryModels[i].get();
+	}
+	public String getfGasConsumed(Gas gas) {
+		int i = -1 ,j = 0;
+		for (Gas decoGas : decoGases ) {
+			if ( decoGas.isEqual(gas) ) i = j;
+			j++;
+		}
+		if ( i < 0 ) return "0 l";
+		else return accessoryModels[i].getf();
+	}
+	public class DataRecord<T> {
+		String label;
+		T value;
+		
+		DataRecord(String label, T value) {
+			this.label = label;
+			this.value = value;
+		}
+
+		public String getLabel() {
+			return label;
+		}
+
+		public T getValue() {
+			return value;
+		}
+	}
+	
+	public ArrayList<DataRecord<Double>> getGasConsumed() {
+		ArrayList<DataRecord<Double>> list = new ArrayList<DataRecord<Double>>();
+		
+		for (Gas decoGas : decoGases ) {
+			list.add(new DataRecord<Double>(decoGas.toString() + " consumed is", getGasConsumed(decoGas) ) );
+		}
+		return list;
+	}
+	public ArrayList<DataRecord<String>> getfGasConsumed() {
+		ArrayList<DataRecord<String>> list = new ArrayList<DataRecord<String>>();
+		
+		for (Gas decoGas : decoGases ) {
+			list.add(new DataRecord<String>(decoGas.toString() + " consumed is", getfGasConsumed(decoGas) ) );
+		}
+		return list;
+	}
+	public ArrayList<DataRecord<Double>> getExtraInfo() {
+		ArrayList<DataRecord<Double>> list = new ArrayList<DataRecord<Double>>();
+		
+		list.add(new DataRecord<Double>("CPTD is", getOTUs() ) );
+		list.add(new DataRecord<Double>("CNS toxicity (%) is", getCNS() ) );
+		list.addAll(getGasConsumed() );
+		return list;
+	}
+	public ArrayList<DataRecord<String>> getfExtraInfo() {
+		ArrayList<DataRecord<String>> list = new ArrayList<DataRecord<String>>();
+		
+		list.add(new DataRecord<String>("CPTD is", getfOTUs() ) );
+		list.add(new DataRecord<String>("CNS toxicity (%) is", getfCNS() ) );
+		list.addAll(getfGasConsumed() );
+		return list;
 	}
 
 	public double getTime() {
@@ -201,5 +270,9 @@ public abstract class ModelledDive implements Dive, Cloneable {
 	public abstract double getCurrentGradient();
 	public double getActualCeiling() {
 		return getCeiling();
+	}
+
+	public static int getMaxStopLength() {
+		return MAX_STOP_LENGTH;
 	}
 }

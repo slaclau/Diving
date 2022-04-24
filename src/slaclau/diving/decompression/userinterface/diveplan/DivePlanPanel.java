@@ -155,5 +155,6 @@ public class DivePlanPanel extends JPanel implements ActionListener {
 		
 		revalidate();
 		repaint();
+		divePlanListener.onUpdate();
 	}
 }

@@ -1,0 +1,2 @@
+Main-Class: slaclau.diving.decompression.DecompressionPlanner
+Class-Path: jfreechart-1.5.3.jar

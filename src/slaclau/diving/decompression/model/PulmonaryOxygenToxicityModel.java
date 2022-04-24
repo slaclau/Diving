@@ -14,6 +14,9 @@ public class PulmonaryOxygenToxicityModel implements AccessoryModel<Double>{
 	public Double get() {
 		return OTUs;
 	}
+	public String getf() {
+		return Math.round( get() * 10d ) / 10d + " OTUs";
+	}
 	
 	public void descend(double depth, double rate) {
 		GasAtDepth gas = dive.getCurrentPoint();
