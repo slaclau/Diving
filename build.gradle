@@ -30,7 +30,7 @@ application {
     mainClass = 'slaclau.diving.decompression.DecompressionPlanner'
 }
 
-tasks.named('test') {
+test {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
