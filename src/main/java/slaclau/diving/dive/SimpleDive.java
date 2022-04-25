@@ -17,6 +17,7 @@ public class SimpleDive implements Dive {
 
 	public void setTimes(ArrayList<Double> times) {
 		this.times = times;
+		duration = times.get(times.size() - 1);
 	}
 
 	public ArrayList<GasAtDepth> getDivePoints() {
@@ -38,6 +39,7 @@ public class SimpleDive implements Dive {
 	
 	public SimpleDive(double time, GasAtDepth gas) {
 		initialTime = time;
+		duration = time;
 		initialPoint = gas;
 		times.add(time);
 		divePoints.add(gas);
@@ -146,5 +148,13 @@ public class SimpleDive implements Dive {
 	@Override
 	public int getNumberOfPoints() {
 		return divePoints.size();
+	}
+
+	double getInitialTime() {
+		return initialTime;
+	}
+
+	GasAtDepth getInitialPoint() {
+		return initialPoint;
 	}
 }
