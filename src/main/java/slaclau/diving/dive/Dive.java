@@ -2,6 +2,7 @@ package slaclau.diving.dive;
 
 import slaclau.diving.gas.Gas;
 import slaclau.diving.gas.GasAtDepth;
+import slaclau.diving.gas.GasException;
 
 public interface Dive extends Cloneable {
 	public GasAtDepth getPoint(double time) throws DiveTimeOutOfBoundsException;
