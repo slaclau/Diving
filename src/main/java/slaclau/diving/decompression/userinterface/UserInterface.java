@@ -51,4 +51,8 @@ public class UserInterface {
 	public DiveChartPanel getDiveChartPanel() {
 		return diveChartPanel;
 	}
+	
+	public void dispose() {
+		jframe.dispose();
+	}
 }

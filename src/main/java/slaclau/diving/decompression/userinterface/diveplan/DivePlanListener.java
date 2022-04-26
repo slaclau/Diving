@@ -87,8 +87,6 @@ public class DivePlanListener implements ActionListener, ChangeListener {
 				userInterface.println(e.toString());
 			}
 		};
-		
-		updateThread.stop();
 		updateThread = new Thread(r,"updateThread");
 		updateThread.start();
 	}
