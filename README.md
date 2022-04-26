@@ -1,2 +1,2 @@
 # Diving
-![build](https://github.com/slaclau/Diving/actions/workflows/gradle.yml/badge.svg?event=push)
+[![Build (ubuntu-latest)](https://github.com/slaclau/Diving/actions/workflows/gradle.yml/badge.svg)](https://github.com/slaclau/Diving/actions/workflows/gradle.yml)
