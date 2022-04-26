@@ -25,13 +25,13 @@ jobs:
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
         arguments: build
-    - name: Upload jar
+    - name: Upload jars
       uses: actions/upload-artifact@v3
       with:
         name: jar
         path: build/libs
-    - name: Upload dist
+    - name: Upload distributions
       uses: actions/upload-artifact@v3
       with:
-        name: dist
-        path: build/dist
+        name: distributions
+        path: build/distributions
