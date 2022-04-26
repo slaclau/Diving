@@ -10,7 +10,12 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
     id 'org.graalvm.buildtools.native' version '0.9.11'
+    id 'org.beryx.runtime' version '1.12.7'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'com.palantir.git-version' version '0.15.0'
 }
+
+version gitVersion()
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -23,7 +28,13 @@ dependencies {
 
 	// Use jfreechart for charting.
     implementation 'org.jfree:jfreechart:1.5.3'
-    
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+		vendor=JvmVendorSpec.GRAAL_VM
+	}
 }
 
 application {
@@ -31,8 +42,29 @@ application {
     mainClass = 'slaclau.diving.decompression.DecompressionPlanner'
 }
 
+run {
+	outputs.upToDateWhen { false }
+}
+
+
 test {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+graalvmNative {
+	binaries {
+		main {
+			buildArgs.add('--report-unsupported-elements-at-runtime')
+		}
+	}
+}
+
+runtime {
+	jpackage {
+		installerName = 'decompression-planner'
+		installerType = 'deb'
+		installerOptions = ['--verbose', '--linux-shortcut']
+	}
 }
 
