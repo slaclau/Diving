@@ -1,0 +1,26 @@
+{
+  "resources":{
+  "includes":[]},
+  "bundles":[
+    {
+      "name":"com.sun.swing.internal.plaf.basic.resources.basic",
+      "classNames":["com.sun.swing.internal.plaf.basic.resources.basic"]
+    }, 
+    {
+      "name":"com.sun.swing.internal.plaf.metal.resources.metal",
+      "classNames":["com.sun.swing.internal.plaf.metal.resources.metal"]
+    }, 
+    {
+      "name":"org.jfree.chart.LocalizationBundle",
+      "locales":["und"]
+    }, 
+    {
+      "name":"org.jfree.chart.plot.LocalizationBundle",
+      "locales":["und"]
+    }, 
+    {
+      "name":"sun.awt.resources.awt",
+      "classNames":["sun.awt.resources.awt"]
+    }
+  ]
+}
