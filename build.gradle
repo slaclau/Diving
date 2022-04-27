@@ -53,6 +53,18 @@ test {
     finalizedBy jacocoTestReport
 }
 
+
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        csv.required = true
+		html.required = true
+    }
+}
+
+
+
 //graalvmNative {
 	//binaries {
 		//main {
