@@ -25,9 +25,7 @@ jobs:
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
         arguments: build
-    - uses: codecov/codecov-action@v2
-      with:
-        files: ./**/*.xml
+    - uses: codecov/codecov-action@v3
     - name: Upload jars
       uses: actions/upload-artifact@v3
       with:
