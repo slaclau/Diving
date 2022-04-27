@@ -13,8 +13,10 @@ plugins {
     id 'org.beryx.runtime' version '1.12.7'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'com.palantir.git-version' version '0.15.0'
+    id 'maven-publish'
 }
 
+group = 'slaclau'
 version gitVersion()
 
 repositories {
@@ -70,6 +72,25 @@ runtime {
 		installerName = 'decompression-planner'
 		installerType = 'deb'
 		installerOptions = ['--verbose', '--linux-shortcut']
+	}
+}
+
+publishing {
+	publications {
+		jars(MavenPublication) {
+			from components.java
+		}
+	}
+	
+	repositories {
+		maven {
+			name = 'GitHubPackages'
+			url = 'https://maven.pkg.github.com/slaclau/Diving'
+			credentials {
+    			username = System.getenv("GITHUB_ACTOR")
+    			password = System.getenv("GITHUB_TOKEN")
+			}
+		}
 	}
 }
 
