@@ -44,7 +44,6 @@ public class DivePlanListener implements ActionListener, ChangeListener {
 	
 	private Thread updateThread = new Thread("updateThread");
 	
-	@SuppressWarnings({ "deprecation" })
 	public void onUpdate() {
 		decoGasPlan = new DecoGasPlan();
 		Gas bottomGas = gasPlanPanel.getBottomGas();
