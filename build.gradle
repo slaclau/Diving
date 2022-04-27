@@ -84,15 +84,15 @@ jacocoTestReport {
 runtime {
 	jpackage {
 		installerName = 'decompression-planner'
-		
-		linux {
+	
+		//linux {
 			installerType = 'deb'
 			installerOptions = ['--linux-shortcut']
-		}
+		//}
 		
-		windows {
-			installerType = 'exe'
-		}
+		//windows {
+			//installerType = 'exe'
+		//}
 	}
 }
 
