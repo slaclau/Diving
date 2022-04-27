@@ -78,7 +78,7 @@ public class BuhlmannModelWithGF extends BuhlmannModel {
 			a = ( nitrogenA[i] * nitrogenLoading[i] + heliumA[i] * heliumLoading[i] ) / ( nitrogenLoading[i] + heliumLoading[i] );
 			b = ( nitrogenB[i] * nitrogenLoading[i] + heliumB[i] * heliumLoading[i] ) / ( nitrogenLoading[i] + heliumLoading[i] );
 
-			compartmentCeiling[i] = 10 * ( ( nitrogenLoading[i] + heliumLoading[i] - gradientFactor * a ) / ( gradientFactor / b - gradientFactor + 1 ) - 1 );
+			compartmentCeiling[i] = 10 * ( ( ( nitrogenLoading[i] + heliumLoading[i] - gradientFactor * a ) / ( gradientFactor / b - gradientFactor + 1 ) ) - 1 );
 		}
 		
 		double ceiling = compartmentCeiling[0];
@@ -104,7 +104,7 @@ public class BuhlmannModelWithGF extends BuhlmannModel {
 			a = ( nitrogenA[i] * nitrogenLoading[i] + heliumA[i] * heliumLoading[i] ) / ( nitrogenLoading[i] + heliumLoading[i] );
 			b = ( nitrogenB[i] * nitrogenLoading[i] + heliumB[i] * heliumLoading[i] ) / ( nitrogenLoading[i] + heliumLoading[i] );
 
-			compartmentCeiling[i] = 10 * ( ( nitrogenLoading[i] + heliumLoading[i] - getGradientFactor() * a ) / ( getGradientFactor() / b - getGradientFactor() + 1 ) - 1 );
+			compartmentCeiling[i] = 10 * ( ( ( nitrogenLoading[i] + heliumLoading[i] - getGradientFactor() * a ) / ( getGradientFactor() / b - getGradientFactor() + 1 ) ) - 1 );
 		}
 		
 		double ceiling = compartmentCeiling[0];

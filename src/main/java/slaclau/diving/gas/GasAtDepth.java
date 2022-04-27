@@ -29,7 +29,7 @@ public class GasAtDepth extends Gas {
 	}
 	
 	public double getEND() {
-		return ( depth + 10 * getAtmosphericPressure() ) * ( 1 - getHeliumFraction() ) - 10 * getAtmosphericPressure();
+		return ( depth + 10 * getAtmosphericPressure() ) * ( 1 - getHeliumFraction() ) - ( 10 * getAtmosphericPressure() );
 	}
 	
 	public double getOxygenPartialPressure() {
