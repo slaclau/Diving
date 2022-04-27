@@ -26,8 +26,6 @@ jobs:
       with:
         arguments: build
     - uses: codecov/codecov-action@v2
-      with:
-        files: ./*.xml
     - name: Upload jars
       uses: actions/upload-artifact@v3
       with:
