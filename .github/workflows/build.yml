@@ -35,3 +35,8 @@ jobs:
       with:
         name: distributions
         path: build/distributions
+    - name: upload reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: report
+        path: build/reports
