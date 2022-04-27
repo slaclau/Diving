@@ -26,6 +26,10 @@ jobs:
       with:
         arguments: build
     - uses: codecov/codecov-action@v2
+    - uses: codacy/codacy-coverage-reporter-action@v1
+      with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: jacocoTestReport.xml
     - name: Upload jars
       uses: actions/upload-artifact@v3
       with:
