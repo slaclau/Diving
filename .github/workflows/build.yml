@@ -25,7 +25,7 @@ jobs:
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
         arguments: build
-    - uses: codecov/codecov-action@v3
+    - uses: codecov/codecov-action@v2
     - name: Upload jars
       uses: actions/upload-artifact@v3
       with:
@@ -36,7 +36,7 @@ jobs:
       with:
         name: distributions
         path: build/distributions
-    - name: upload reports
+    - name: Upload reports
       uses: actions/upload-artifact@v3
       with:
         name: report
