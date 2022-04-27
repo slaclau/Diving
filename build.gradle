@@ -13,6 +13,7 @@ plugins {
     id 'org.beryx.runtime' version '1.12.7'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'com.palantir.git-version' version '0.15.0'
+    id 'jacoco'
 }
 
 version gitVersion()
@@ -49,6 +50,7 @@ run {
 test {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 //graalvmNative {
