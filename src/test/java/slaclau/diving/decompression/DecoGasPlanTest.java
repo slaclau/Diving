@@ -2,11 +2,8 @@ package slaclau.diving.decompression;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Arrays;
-
 import org.junit.jupiter.api.Test;
 
-import slaclau.diving.gas.Gas;
 import slaclau.diving.gas.GasException;
 import slaclau.diving.gas.Nitrox;
 
