@@ -1,4 +1,4 @@
-name: Build (ubuntu-latest)
+name: Release (ubuntu-latest)
 
 on:
   push:
