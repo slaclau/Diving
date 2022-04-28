@@ -83,8 +83,15 @@ jacocoTestReport {
 
 runtime {
 	jpackage {
+		def currentOs = org.gradle.internal.os.OperatingSystem.current()
+		if(currentOs.windows) {
+			installerType = 'exe'
+		}
+		if(currentOs.linux) {
+			installerType = 'deb'
+			installerOptions = ['--linux-shortcut']
+		}
 		installerName = 'decompression-planner'
-		installerOptions = ['--linux-shortcut']
 	}
 }
 
