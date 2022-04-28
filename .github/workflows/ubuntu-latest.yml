@@ -26,7 +26,7 @@ jobs:
     - name: Build with Gradle
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
-        arguments: build publish
+        arguments: build jpackage publish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - uses: codecov/codecov-action@v2
@@ -44,6 +44,11 @@ jobs:
       with:
         name: distributions
         path: build/distributions
+    - name: Upload packages
+      uses: actions/upload-artifact@v3
+      with:
+        name: packages
+        path: build/jpackage/*.deb
     - name: Upload reports
       uses: actions/upload-artifact@v3
       with:
