@@ -84,7 +84,13 @@ public abstract class ModelledDive implements Dive, Cloneable {
 		for (AccessoryModel<?> m : accessoryModels ) m.descend(depth, rate);
 	}
 ;	public void stay(double time) {
-	for (AccessoryModel<?> m : accessoryModels ) m.stay(time);
+	for (AccessoryModel<?> m : accessoryModels )
+		try {
+			m.stay(time);
+		} catch (ModelException e) {
+			// TODO
+			e.printStackTrace();
+		}
 
 	}
 	public void ascend(double depth, double rate) {

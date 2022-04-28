@@ -89,9 +89,10 @@ public class CNSOxygenToxicityModel implements AccessoryModel<Double> {
 		}
 	}
 	
-	public void stay(double time) {
+	public void stay(double time) throws CNSException {
 		GasAtDepth gas = dive.getCurrentPoint();
 		double pO2 = gas.getOxygenPartialPressure();
+		if (pO2 >= 1.6 ) throw new CNSException();
 		
 		for ( int i = 0 ; i < 7 ; i++ ) {
 			double lowPO2 = PO2_LOW[i];
