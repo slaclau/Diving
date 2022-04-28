@@ -12,7 +12,7 @@ public class DiveTimeOutOfBoundsException extends Exception {
 	
 	public String toString() {
 		if (time < 0) return "Time (" + time + ") cannot be negative";
-		else if (time > duration) return "Time (" + time + ")cannot exceed duration (" + duration + ")";
+		else if (time > duration) return "Time (" + time + ") cannot exceed duration (" + duration + ")";
 		else return "Dive time out of bounds";
 	}
 }
