@@ -48,7 +48,6 @@ run {
 	outputs.upToDateWhen { false }
 }
 
-
 test {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
