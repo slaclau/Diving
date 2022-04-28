@@ -50,11 +50,3 @@ jobs:
       with:
         name: report
         path: build/reports
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        files: |
-          build/distributions
-          build/libs
-          build/jpackage/*.deb
