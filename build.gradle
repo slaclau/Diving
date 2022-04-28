@@ -104,7 +104,7 @@ runtime {
 	}
 }
 
-def debFile = layout.buildDirectory.file('jpackage/decompression-planner_$version.deb')
+def debFile = layout.buildDirectory.file('jpackage/decompression-planner_${project.version}.deb')
 def debArtifact = artifacts.add('archives', debFile.get().asFile) {
 	type 'deb'
 	builtBy 'jpackage'
