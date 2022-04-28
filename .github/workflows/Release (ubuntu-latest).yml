@@ -1,0 +1,21 @@
+name: Build (ubuntu-latest)
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: ./github/workflows/ubuntu-lates.yml
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          build/distributions
+          build/libs
+          build/jpackage/*.deb
