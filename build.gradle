@@ -85,7 +85,7 @@ runtime {
 	jpackage {
 		def currentOs = org.gradle.internal.os.OperatingSystem.current()
 		if(currentOs.windows) {
-			installerType = 'exe'
+			installerType = 'msi'
 			appVersion = '0'
 		}
 		if(currentOs.linux) {
