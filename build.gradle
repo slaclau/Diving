@@ -103,8 +103,8 @@ publishing {
       		name = "GitHubPackages"
       		url = "https://maven.pkg.github.com/slaclau/Diving"
       		credentials {
-        		username = System.getenv("GITHUB_ACTOR")
-        		password = System.getenv("GITHUB_TOKEN")
+        		username = project.findProperty("user") ?: System.getenv("GITHUB_ACTOR")
+        		password = project.findProperty("key") ?: System.getenv("GITHUB_TOKEN")
       		}
     	}
 	}
