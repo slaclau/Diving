@@ -84,7 +84,6 @@ jacocoTestReport {
 runtime {
         distDir = file("$buildDir/shadow")
 	jpackage {
-	        mainJar = "shadow.jar"
 		def currentOs = org.gradle.internal.os.OperatingSystem.current()
 		if(currentOs.windows) {
 			installerType = 'msi'
@@ -124,7 +123,6 @@ tasks.register('copyJar', Copy) {
     dependsOn("shadowJar")
     from shadowJar.outputs.files.singleFile
     into "$buildDir/shadow"
-    rename filename "shadow.jar"
 }
 jpackageImage {
     dependsOn("copyJar")
