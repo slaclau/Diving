@@ -142,12 +142,6 @@ publishing {
   			from components.java
   			artifact debArtifact
   		}
-  		//deb(MavenPublication) {
-  		//	groupId = 'slaclau.diving'
-		//	artifactId = 'decompression-planner-deb'
-  		
-  		//	artifact debArtifact
-  		//}
   	}
 }
 
