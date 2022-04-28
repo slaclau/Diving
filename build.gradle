@@ -138,13 +138,13 @@ publishing {
   	publications {
   		jars(MavenPublication) {
   			groupId = 'slaclau.diving'
-			artifactId = 'decompression-planner'
+			artifactId = 'decompression-planner-jar'
   		
   			from components.java
   		}
   		deb(MavenPublication) {
   			groupId = 'slaclau.diving'
-			artifactId = 'decompression-planner'
+			artifactId = 'decompression-planner-deb'
   		
   			artifact debArtifact
   		}
