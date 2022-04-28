@@ -13,7 +13,7 @@ jobs:
   jpackage:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows]
   
     runs-on: ${{ matrix.os }}
 
