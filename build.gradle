@@ -119,11 +119,3 @@ publishing {
   	}
 }
 
-tasks.register('copyJar', Copy) {
-    dependsOn("shadowJar")
-    from shadowJar.outputs.files.singleFile
-    into "$buildDir/shadow"
-}
-jpackageImage {
-    dependsOn("copyJar")
-}
