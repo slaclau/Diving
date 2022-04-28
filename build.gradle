@@ -86,6 +86,7 @@ runtime {
 		def currentOs = org.gradle.internal.os.OperatingSystem.current()
 		if(currentOs.windows) {
 			installerType = 'exe'
+			appVersion = '0'
 		}
 		if(currentOs.linux) {
 			installerType = 'deb'
