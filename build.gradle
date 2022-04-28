@@ -124,7 +124,7 @@ tasks.register('copyJar', Copy) {
     dependsOn("shadowJar")
     from shadowJar.outputs.files.singleFile
     into "$buildDir/shadow"
-    rename shadowJar.outputs.files.singleFile "shadow.jar"
+    rename filename "shadow.jar"
 }
 jpackageImage {
     dependsOn("copyJar")
