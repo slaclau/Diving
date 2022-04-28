@@ -83,8 +83,8 @@ jacocoTestReport {
 
 runtime {
         distDir = file("$buildDir/shadow")
-	mainJar = "shadow.jar"
 	jpackage {
+	        mainJar = "shadow.jar"
 		def currentOs = org.gradle.internal.os.OperatingSystem.current()
 		if(currentOs.windows) {
 			installerType = 'msi'
