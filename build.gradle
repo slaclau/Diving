@@ -124,6 +124,6 @@ tasks.register('copyJar', Copy) {
     from shadowJar.outputs.files.singleFile
     into "$buildDir/shadow/shadow.jar"
 }
-jpackage {
+jpackageImage {
     dependsOn("copyJar")
 }
