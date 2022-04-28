@@ -83,6 +83,7 @@ jacocoTestReport {
 
 runtime {
         distDir = file("$buildDir/shadow")
+	mainJar = "shadow.jar"
 	jpackage {
 		def currentOs = org.gradle.internal.os.OperatingSystem.current()
 		if(currentOs.windows) {
@@ -123,6 +124,7 @@ tasks.register('copyJar', Copy) {
     dependsOn("shadowJar")
     from shadowJar.outputs.files.singleFile
     into "$buildDir/shadow"
+    rename "shadow.jar"
 }
 jpackageImage {
     dependsOn("copyJar")
