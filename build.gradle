@@ -81,18 +81,17 @@ jacocoTestReport {
 	//}
 //}
 
-runtime {
-	jpackage {
-		installerName = 'decompression-planner'
+tasks.jpackage {
+	dependsOn("build")
+	installerName = 'decompression-planner'
 	
-		//linux {
-			installerType = 'deb'
-			installerOptions = ['--linux-shortcut']
-		//}
+	linux {
+		installerType = 'deb'
+		installerOptions = ['--linux-shortcut']
+	}
 		
-		//windows {
-			//installerType = 'exe'
-		//}
+	windows {
+		installerType = 'exe'
 	}
 }
 
