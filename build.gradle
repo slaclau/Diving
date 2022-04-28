@@ -135,18 +135,19 @@ publishing {
 	}
   
   	publications {
-  		jars(MavenPublication) {
+  		pub(MavenPublication) {
   			groupId = 'slaclau.diving'
-			artifactId = 'decompression-planner-jar'
+			artifactId = 'decompression-planner'
   		
   			from components.java
-  		}
-  		deb(MavenPublication) {
-  			groupId = 'slaclau.diving'
-			artifactId = 'decompression-planner-deb'
-  		
   			artifact debArtifact
   		}
+  		//deb(MavenPublication) {
+  		//	groupId = 'slaclau.diving'
+		//	artifactId = 'decompression-planner-deb'
+  		
+  		//	artifact debArtifact
+  		//}
   	}
 }
 
