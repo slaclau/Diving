@@ -119,7 +119,7 @@ publishing {
 }
 
 tasks.register('copyJar', Copy) {
-    from shadowJar.outputFile
+    from shadowJar.outputs.files.singleFile
     into "$buildDir/shadow.jar"
 }
 jpackage {
