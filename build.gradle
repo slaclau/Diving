@@ -102,8 +102,8 @@ publishing {
       		name = "GitHubPackages"
       		url = "https://maven.pkg.github.com/slaclau/Diving"
       		credentials {
-        		username = "slaclau"
-        		password = "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"
+        		username = System.getenv("GITHUB_ACTOR")
+        		password = System.getenv("GITHUB_TOKEN")
       		}
     	}
 	}
