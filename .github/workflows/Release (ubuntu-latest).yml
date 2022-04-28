@@ -1,7 +1,7 @@
 name: Release (ubuntu-latest)
 
 on:
-  create:
+  push:
     tags:
       - '*'
 
