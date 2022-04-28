@@ -104,10 +104,19 @@ runtime {
 	}
 }
 
-def debFile = layout.buildDirectory.file('jpackage/Diving/lib/decompression-planner.deb')
+def debFile = layout.buildDirectory.file('deb/decompression-planner.deb')
 def debArtifact = artifacts.add('archives', debFile.get().asFile) {
 	type 'deb'
 	builtBy 'jpackage'
+}
+
+task copyDeb(type: Copy) {
+	dependsOn(jpackage)
+	
+	from layout.buildDirectory.dir('jpackage')
+	include '*.deb'
+	into layout.buildDirectory.dir('deb')
+    rename { String fileName -> "decompression-planner.deb" }
 }
 
 publishing {
