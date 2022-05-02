@@ -2,9 +2,6 @@ name: Build (ubuntu-latest)
 
 on:
   push:
-    branches:
-      - master
-  workflow_call:
 
 jobs:
   build:

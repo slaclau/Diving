@@ -12,13 +12,14 @@ plugins {
     //id 'org.graalvm.buildtools.native' version '0.9.11'
     id 'org.beryx.runtime' version '1.12.7'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
-    id 'com.palantir.git-version' version '0.12.3'
+    // id 'com.palantir.git-version' version '0.12.3'
+    id 'com.limark.gitflowsemver' version '0.3.1'
     id 'jacoco'
     id 'maven-publish'
 }
 
 
-version gitVersion()
+// version gitVersion()
 
 repositories {
     // Use Maven Central for resolving dependencies.
