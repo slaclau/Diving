@@ -3,7 +3,7 @@ name: Release (ubuntu-latest)
 on:
   push:
     tags:
-      - '*'
+      - '*.*.*'
 
 jobs:
   build:
