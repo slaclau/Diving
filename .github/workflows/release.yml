@@ -1,4 +1,4 @@
-name: Release (ubuntu-latest)
+name: Release
 
 on:
   push:
