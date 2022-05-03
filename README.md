@@ -1,6 +1,6 @@
 # Diving
 [![Build (ubuntu-latest)](https://github.com/slaclau/Diving/actions/workflows/build.yml/badge.svg)](https://github.com/slaclau/Diving/actions/workflows/build.yml)
-[![Release (ubuntu-latest)](https://github.com/slaclau/Diving/actions/workflows/jpackage.yml/badge.svg)](https://github.com/slaclau/Diving/actions/workflows/release.yml)
+[![Release (ubuntu-latest)](https://github.com/slaclau/Diving/actions/workflows/release.yml/badge.svg)](https://github.com/slaclau/Diving/actions/workflows/release.yml)
 [![codecov](https://codecov.io/gh/slaclau/Diving/branch/master/graph/badge.svg?token=VRSKEFK0C1)](https://codecov.io/gh/slaclau/Diving)
 [![Known Vulnerabilities](https://snyk.io/test/github/slaclau/Diving/badge.svg)](https://snyk.io/test/github/slaclau/Diving})
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/slaclau/Diving.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/slaclau/Diving/alerts/)
