@@ -110,12 +110,17 @@ def debArtifact = artifacts.add('archives', debFile.get().asFile) {
 	builtBy 'jpackage'
 }
 
+jpackage {
+	finalizedBy {
+		copyDeb
+	}
+}
+
 task copyDeb(type: Copy) {
-	dependsOn jpackage
 	from layout.buildDirectory.dir('jpackage')
 	include '*.deb'
 	into layout.buildDirectory.dir('deb')
-	rename { String fileName -> "decompression-planner.deb" }
+    rename { String fileName -> "decompression-planner.deb" }
 }
 
 publishing {
@@ -141,8 +146,5 @@ publishing {
   	}
 }
 
-publishPubPublicationToGitHubPackagesRepository {
-	dependsOn copyDeb
-}
 
 
