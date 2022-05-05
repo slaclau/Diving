@@ -22,7 +22,7 @@ public class UserInterface {
 	public UserInterface() {
 		jframe = new JFrame();
 		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jframe.setJMenuBar(new MainMenuBar());
+		jframe.setJMenuBar(new MainMenuBar(this));
 		
 		rightTabbedPane.addTab("Chart options", diveChartControlPanel);
 		
@@ -56,5 +56,9 @@ public class UserInterface {
 	
 	public void dispose() {
 		jframe.dispose();
+	}
+
+	public JFrame getJframe() {
+		return jframe;
 	}
 }
