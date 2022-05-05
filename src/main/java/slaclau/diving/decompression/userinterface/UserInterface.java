@@ -5,6 +5,7 @@ import javax.swing.*;
 import slaclau.diving.decompression.userinterface.chart.DiveChartControlPanel;
 import slaclau.diving.decompression.userinterface.chart.DiveChartPanel;
 import slaclau.diving.decompression.userinterface.diveplan.*;
+import slaclau.diving.decompression.userinterface.menu.MainMenuBar;
 
 public class UserInterface {
 	private JFrame jframe;
@@ -21,6 +22,7 @@ public class UserInterface {
 	public UserInterface() {
 		jframe = new JFrame();
 		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jframe.setJMenuBar(new MainMenuBar());
 		
 		rightTabbedPane.addTab("Chart options", diveChartControlPanel);
 		
