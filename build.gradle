@@ -101,6 +101,7 @@ runtime {
 			installerOptions = ['--linux-shortcut']
 		}
 		installerName = 'decompression-planner'
+		installerOptions = ['--license-file', 'LICENSE']
 	}
 }
 
