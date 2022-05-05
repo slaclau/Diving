@@ -146,7 +146,7 @@ publishing {
   	}
 }
 
-task createProperties {
+task createProperties(dependsOn: processResources) {
 	doLast {
 		new File("$buildDir/resources/main/version.properties").withWriter { w ->
 			Properties p = new Properties()
