@@ -25,6 +25,8 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import slaclau.diving.decompression.userinterface.UserInterface;
+
 @SuppressWarnings("serial")
 public class MultiDivePanel extends JPanel implements ActionListener {
 	private ArrayList<Dive> dives;
@@ -37,10 +39,14 @@ public class MultiDivePanel extends JPanel implements ActionListener {
 	
 	private DivePlanListener divePlanListener;
 	
+	private UserInterface userInterface;
+	
 	private boolean init = false;
 	
-	public MultiDivePanel() {
+	public MultiDivePanel(UserInterface userInterface) {
 		super();
+		this.userInterface = userInterface;
+		divePlanListener = new DivePlanListener(this);
 		
 		outerInnerPanel.add(innerPanel);
 		outerInnerPanel.add(Box.createVerticalGlue());
@@ -51,11 +57,7 @@ public class MultiDivePanel extends JPanel implements ActionListener {
 		setLayout(new BorderLayout());
 
 		innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.Y_AXIS));
-	}
-	
-	public void addListenerAndInit(DivePlanListener divePlanListener) {
-		this.divePlanListener = divePlanListener;
-		if ( !init ) init();
+		init();
 	}
 	
 	private void init() {
@@ -88,7 +90,7 @@ public class MultiDivePanel extends JPanel implements ActionListener {
 	}
 	
 	class Dive extends JPanel {
-		private JButton diveButton;
+		private JButton diveButton, editButton;
 		private JLabel diveLabel, diveDescription;
 		int dive;
 		
@@ -104,6 +106,11 @@ public class MultiDivePanel extends JPanel implements ActionListener {
 			// TODO add contents to label
 			diveDescription.setPreferredSize(new Dimension(100,20));
 			add(diveDescription);
+			
+			editButton = new JButton("Edit dive");
+			editButton.setActionCommand("e" + ((Integer) dive).toString());
+			editButton.addActionListener(MultiDivePanel.this);
+			add(editButton);
 			
 			diveButton = new JButton("Remove dive");
 			diveButton.setEnabled(false);
@@ -122,6 +129,7 @@ public class MultiDivePanel extends JPanel implements ActionListener {
 			dive = i;
 			diveLabel.setText("Dive " + dive);
 			diveButton.setActionCommand(((Integer) dive).toString());
+			editButton.setActionCommand("e" + ((Integer) dive).toString());
 		}
 	}
 	
@@ -131,12 +139,17 @@ public class MultiDivePanel extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
-		if (ae.getActionCommand() == "add") {
+		String string = ae.getActionCommand();
+		if (string == "add") {
 			addDive();
-		} else if (ae.getActionCommand() == "save" ) {
+		} else if (string == "save" ) {
 			System.out.println("save");
+		} else if (string.contains("e")) {
+			string = string.replace("e","");
+			int i = Integer.parseInt(string);
+			System.out.println(i);
 		} else {
-			int i = Integer.parseInt(ae.getActionCommand());
+			int i = Integer.parseInt(string);
 			innerPanel.remove(dives.get(i-1));
 			dives.remove(i-1);
 			if (dives.size() > 1) {
@@ -153,6 +166,9 @@ public class MultiDivePanel extends JPanel implements ActionListener {
 		
 		revalidate();
 		repaint();
-		divePlanListener.onUpdate();
+	}
+	
+	public UserInterface getUserInterface() {
+		return userInterface;
 	}
 }

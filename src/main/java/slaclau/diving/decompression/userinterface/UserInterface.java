@@ -30,7 +30,7 @@ public class UserInterface {
 	private DiveChartPanel diveChartPanel = new DiveChartPanel();
 	private DiveChartControlPanel diveChartControlPanel = new DiveChartControlPanel(diveChartPanel);
 	private ConsolePanel consolePanel = new ConsolePanel();
-	private DivePlanMainPanel divePlanMainPanel = new DivePlanMainPanel(this);
+	private MultiDivePanel multiDivePanel = new MultiDivePanel(this);
 	
 	private JTabbedPane rightTabbedPane = new JTabbedPane();
 	private JTabbedPane bottomTabbedPane = new JTabbedPane();
@@ -52,7 +52,7 @@ public class UserInterface {
 		verticalSplitPane.setOneTouchExpandable(true);
 		verticalSplitPane.setResizeWeight(1);
 		
-		mainSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,true,divePlanMainPanel,verticalSplitPane);
+		mainSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,true,multiDivePanel,verticalSplitPane);
 		mainSplitPane.setOneTouchExpandable(true);
 		jframe.add(mainSplitPane);
 		jframe.setExtendedState(JFrame.MAXIMIZED_BOTH);

@@ -47,15 +47,8 @@ public class DivePlanListener implements ActionListener, ChangeListener {
 	
 	private UserInterface userInterface;
 	
-	public DivePlanListener(DivePlanMainPanel divePlanMainPanel) {
-		divePlanPanel = divePlanMainPanel.getDivePlanPanel();
-		gasPlanPanel = divePlanMainPanel.getGasPlanPanel();
-		decoPlanPanel = divePlanMainPanel.getDecoPlanPanel();
-		extraInfoPanel = divePlanMainPanel.getExtraInfoPanel();
-		
-		userInterface = divePlanMainPanel.getUserInterface();
-		
-		diveChartPanel = userInterface.getDiveChartPanel();
+	public DivePlanListener(MultiDivePanel multiDivePanel) {
+
 	}
 	
 	private Thread updateThread = new Thread("updateThread");

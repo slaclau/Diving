@@ -43,7 +43,6 @@ public class DivePlanMainPanel extends JSplitPane {
 		
 		this.userInterface = userInterface;
 		
-		listener = new DivePlanListener(this);
 		divePlanPanel.addListenerAndInit(listener);
 		gasPlanPanel.addListenerAndInit(listener);
 		
