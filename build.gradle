@@ -147,18 +147,11 @@ publishing {
   	}
 }
 
-task createProperties(dependsOn: processResources) {
-	doLast {
-		new File("$buildDir/resources/main/version.properties").withWriter { w ->
-			Properties p = new Properties()
-			p['version'] = project.version.toString()
-			p.store w, null
-		}
-	}
-}
-
-classes {
-	dependsOn createProperties
+versionConfig {  
+	alphaLabel = "alpha"  
+	rcLabel = "beta"  
+	gitDescribeMatchRule = "*[0-9].[0-9]*.[0-9]*"  
+	propertiesFile = "$buildDir/resources/main/version.properties"  
 }
 
 
